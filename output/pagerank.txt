@@ -1,0 +1,11 @@
+https://en.wikipedia.org/wiki/United_States_presidential_election/ 0.9999505043829933
+https://www.whitehouse.gov/issues/economy-jobs/page/70/ 0.21999999999999995
+http://dmoztools.net/Regional/North_America/United_States/Government/Elections/President/ 0.9999505043829933
+https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html#nav-group-2ec82 0.21999999999999995
+https://www.whitehouse.gov/about-the-white-house/elections-voting/ 0.19999999999999996
+https://www.fema.gov/national-preparedness-goal 0.21999999999999995
+https://www.cdc.gov/coronavirus/2019-ncov/daily-life-coping/animals.html 0.21999999999999995
+https://oig.hhs.gov 0.21999999999999995
+https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/index.html#nav-group-a7300 0.21999999999999995
+https://www.fema.gov/dam-safety-publications-resources 0.21999999999999995
+https://www.cdc.gov/coronavirus/2019-ncov/covid-data/forecasting-us.html 0.21999999999999995

@@ -15,7 +15,7 @@ public class Utils {
         double dotProduct = 0.0;
         for(String key: vector1.keySet()) {
             if(vector2.containsKey(key)) {
-                dotProduct = dotProduct + (vector1.get(key) * vector2.get(key));
+                dotProduct += (vector1.get(key) * vector2.get(key));
             }
         }
         return dotProduct;

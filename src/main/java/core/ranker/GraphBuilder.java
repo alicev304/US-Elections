@@ -1,5 +1,6 @@
 package core.ranker;
 
+import utils.Constants;
 import utils.io.FileHandler;
 
 import java.io.File;
@@ -10,12 +11,12 @@ import java.util.Set;
 
 public class GraphBuilder {
 
-    private String filePath;
+    private final String filePath;
 
-    private Graph graph;
+    private final Graph graph;
 
-    public GraphBuilder(String filePath) {
-        this.filePath = filePath;
+    public GraphBuilder() {
+        this.filePath = Constants.LIST_OF_URLS;
         graph = new Graph();
     }
 
@@ -92,15 +93,5 @@ public class GraphBuilder {
             outLinks.sort((o1, o2) -> -o1.compareTo(o2));
             System.out.println("Largest number of outgoing links: " + outLinks.get(0));
         }
-    }
-
-    public void run() {
-        GraphBuilder constructGraphHelper = new GraphBuilder("output/links.txt");
-        constructGraphHelper.constructGraph();
-        constructGraphHelper.generateGraphStatistics(constructGraphHelper.getGraph());
-        PageRank pageRank = new PageRank(constructGraphHelper.getGraph());
-        pageRank.computeGraphPageRank();
-        pageRank.writeResults("output/pagerank.txt");
-
     }
 }

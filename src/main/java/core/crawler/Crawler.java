@@ -1,5 +1,6 @@
 package core.crawler;
 
+import utils.Constants;
 import utils.io.FileHandler;
 
 import java.util.*;
@@ -39,7 +40,7 @@ public class Crawler {
             spider.search(url, pagesVisited, totalPagesVisited);
             System.out.println("\n**Done** Visited " + this.pagesVisited.get(url).size() + " web page(s)");
         });
-        FileHandler handler = new FileHandler("output/links.txt");
+        FileHandler handler = new FileHandler(Constants.LIST_OF_URLS);
         handler.writeLinksToFile(pagesVisited);
     }
 }

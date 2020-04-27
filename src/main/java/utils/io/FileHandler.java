@@ -1,5 +1,6 @@
 package utils.io;
 
+import core.corpus.Tokenizer;
 import core.ranker.Graph;
 import core.ranker.Node;
 import utils.Constants;
@@ -119,6 +120,26 @@ public class FileHandler {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public List<String> readBrokenFile(File file, Tokenizer tokenizer) {
+        List<String> content = null;
+        if(file.isFile()) {
+            try {
+                content = new ArrayList<>();
+                FileReader reader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(reader);
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    List<String> tokens = tokenizer.
+                }
+                bufferedReader.close();
+                reader.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return content;
     }
 
     public List<String> readFileContent() {

@@ -7,9 +7,11 @@ import core.crawler.Crawler;
 import core.indexer.SPIMI;
 import core.ranker.Graph;
 import core.ranker.GraphBuilder;
+import core.ranker.PageRank;
 import spark.ModelAndView;
 import spark.Spark;
 import spark.template.velocity.VelocityTemplateEngine;
+import utils.Constants;
 import utils.filter.HTMLFilter;
 import utils.io.FileHandler;
 import utils.io.IndexFileHandler;
@@ -23,6 +25,8 @@ import java.util.*;
 import static spark.Spark.*;
 
 public class Worker {
+    public static Map<String, List<String>> tokenMap = null;
+
     public static Map<String, Short> indexHeaders = null;
 
     public static Map<String, Double> pageRank = null;
@@ -34,7 +38,7 @@ public class Worker {
     public static void main(String[] args) {
 
         Spark.staticFileLocation("/");
-        loadStopwords("src/main/resources/stopwords.txt");
+        loadStopwords(Constants.STOPWORDS);
         fetchLinks();
         buildCorpus();
         createIndex();
@@ -86,7 +90,7 @@ public class Worker {
     }
 
     private static void fetchLinks() {
-        File linkFile = new File("output/links.txt");
+        File linkFile = new File(Constants.LIST_OF_URLS);
         if (!linkFile.exists()) {
             Crawler crawler = new Crawler();
             crawler.crawl();
@@ -94,31 +98,30 @@ public class Worker {
     }
 
     private static void buildCorpus() {
-        File dir = new File("output/corpus/");
+        File dir = new File(Constants.TOKENIZED_CORPUS_DIR_PATH);
         if (dir.isDirectory() && Objects.requireNonNull(dir.list()).length == 0) {
-            System.out.println("Reached here");
-            CorpusBuilder builder = new CorpusBuilder("output/links.txt");
-            builder.build();
+            Tokenizer tokenizer = new Tokenizer(Tokenizer.LEMMA_TOKENS, stopwords);
+            CorpusBuilder builder = new CorpusBuilder(Constants.LIST_OF_URLS);
+            builder.build(tokenizer);
+            tokenMap = tokenizer.getTokenMap();
         }
     }
 
     private static void createIndex() {
-        File file = new File("output/index_uncompressed");
+        File file = new File(Constants.INDEX_FILE);
         if (!file.exists()) {
-            Tokenizer tokenizer = new Tokenizer(Tokenizer.LEMMA_TOKENS, stopwords);
-            tokenizer.tokenize("output/corpus", new HTMLFilter(), true);
             SPIMI spimi = new SPIMI();
-            spimi.createIndex(tokenizer.getTokenMap(), "output/index_uncompressed");
+            spimi.createIndex(tokenMap, Constants.INDEX_FILE);
         }
     }
 
     private static void loadIndexHeaders() {
-        IndexFileHandler handler = new IndexFileHandler("output/index_uncompressed");
+        IndexFileHandler handler = new IndexFileHandler(Constants.INDEX_FILE);
         indexHeaders = handler.readIndexHeaders();
     }
 
     private static void loadPageRankScores() {
-        FileHandler fileHandler = new FileHandler("output/pagerank.txt");
+        FileHandler fileHandler = new FileHandler(Constants.PAGE_RANKS);
         List<String> content = fileHandler.readFileContent();
         if(content != null && content.size() > 0) {
             if (pageRank == null) {
@@ -134,9 +137,13 @@ public class Worker {
     }
 
     public static void loadGraph() {
-        GraphBuilder helper = new GraphBuilder("output/links.txt");
-        helper.constructGraph();
-        mainGraph = helper.getGraph();
+        GraphBuilder builder = new GraphBuilder();
+        builder.constructGraph();
+        mainGraph = builder.getGraph();
+        GraphBuilder.generateGraphStatistics(builder.getGraph());
+        PageRank pageRank = new PageRank(builder.getGraph());
+        pageRank.computeGraphPageRank();
+        pageRank.writeResults(Constants.PAGE_RANKS);
     }
 
     public static void loadStopwords(String stopWordsFilePath) {
@@ -156,7 +163,7 @@ public class Worker {
     }
 
 //    private static void loadHITSScores() {
-//        FileHandler fileHandler = new FileHandler("output/hits.txt");
+//        FileHandler fileHandler = new FileHandler(Constants.HITS);
 //        List<String> content = fileHandler.readFileContent();
 //        if(content != null && content.size() > 0) {
 //            if (authorityScores == null) {

@@ -18,23 +18,11 @@ import java.util.Map;
 import java.util.Set;
 
 public class QueryHandler {
-    private String queryStr;
+    private final String queryStr;
 
     private Query query = null;
 
-    public QueryHandler() {
-        this.queryStr = "";
-    }
-
     public QueryHandler(String queryStr) {
-        this.queryStr = queryStr;
-    }
-
-    public String getQueryStr() {
-        return queryStr;
-    }
-
-    public void setQueryStr(String queryStr) {
         this.queryStr = queryStr;
     }
 
@@ -127,7 +115,6 @@ public class QueryHandler {
         Map<String, Double> authorityScores = new LinkedHashMap<>();
         Map<String, Double[]> actualHubScores= hits.getHubScores();
         Map<String, Double[]> actualAuthScores= hits.getAuthorityScores();
-//        for(String key: csResultsKeys) {
         for(String key: actualAuthScores.keySet()) {
             if(actualHubScores.containsKey(key)) {
                 hubScores.put(key, actualHubScores.get(key)[1]);

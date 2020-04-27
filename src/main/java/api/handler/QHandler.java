@@ -38,7 +38,6 @@ public class QHandler implements IHandler {
 
         DocumentHandler documentHandler = new DocumentHandler(Constants.TOKENIZED_CORPUS_DIR_PATH);
         documentHandler.loadDocuments();
-        System.out.println(documentHandler.getDocuments().length + " doclen");
 
         byte modelType = Constants.SIMPLE_COSINE;
         try {
@@ -59,6 +58,7 @@ public class QHandler implements IHandler {
         JsonObject jsonElement = new JsonObject();
 
         Map<String, Double> results;
+        System.out.println(qeType + " qeType");
 
         if(qeType != -1) {
             int K = 20;

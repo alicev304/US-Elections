@@ -37,10 +37,10 @@ public class DocumentHandler {
             if(file.isDirectory()) {
                 int counter = 0;
                 documents = new Document[fileCount];
-                for(File file1: file.listFiles()) {
+                for(File doc: file.listFiles()) {
                     if(counter < fileCount) {
-                        if (file1.isFile()) {
-                            documents[counter] = toDocument(fileHandler.readFileContent(file1), counter, file1.getName().replace(".txt", ""));
+                        if (doc.isFile()) {
+                            documents[counter] = toDocument(fileHandler.readFileContent(doc), counter, doc.getName().replace(".txt", ""));
                         }
                         counter++;
                     }
