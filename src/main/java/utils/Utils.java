@@ -1,5 +1,7 @@
 package utils;
 
+import core.query.Document;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

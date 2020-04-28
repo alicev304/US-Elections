@@ -7,23 +7,15 @@ import utils.io.FileHandler;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 public class DocumentHandler {
     private Document[] documents;
 
-    private String corpusPath;
-
-    private FileHandler fileHandler;
-
-    private int fileCount = Constants.MAX_BLOCK_FILES_COUNT;
+    private final String corpusPath;
 
     public DocumentHandler(String corpusPath) {
         this.corpusPath = corpusPath;
-    }
-
-    public DocumentHandler(String corpusPath, int fileCount) {
-        this.corpusPath = corpusPath;
-        this.fileCount = fileCount;
     }
 
     public Document[] getDocuments() {
@@ -31,16 +23,17 @@ public class DocumentHandler {
     }
 
     public void loadDocuments() {
-        fileHandler = new FileHandler(corpusPath);
+        FileHandler fileHandler = new FileHandler(corpusPath);
         if(!corpusPath.isEmpty()) {
             File file = new File(corpusPath);
             if(file.isDirectory()) {
                 int counter = 0;
+                int fileCount = file.listFiles().length;
                 documents = new Document[fileCount];
-                for(File doc: file.listFiles()) {
+                for(File doc: Objects.requireNonNull(file.listFiles())) {
                     if(counter < fileCount) {
                         if (doc.isFile()) {
-                            documents[counter] = toDocument(fileHandler.readFileContent(doc), counter, doc.getName().replace(".txt", ""));
+                            documents[counter] = toDocument(fileHandler.readFileContent(doc), counter);
                         }
                         counter++;
                     }
@@ -48,20 +41,22 @@ public class DocumentHandler {
             }
             else {
                 documents = new Document[1];
-                documents[0] = toDocument(fileHandler.readFileContent(file), 0, file.getName());
+                documents[0] = toDocument(fileHandler.readFileContent(file), 0);
             }
         }
     }
 
-    private Document toDocument(List<String> fileTokens, int id, String name) {
+    private Document toDocument(List<String> fileTokens, int id) {
         if(fileTokens == null) {
             return null;
         }
         Document document = new Document(id);
-        document.setName(name);
+        document.setUrl(fileTokens.get(0));
+        document.setName(fileTokens.get(1));
+        for (int i = 1; i < fileTokens.size(); i++) document.addTerm(fileTokens.get(i));
         fileTokens.forEach(document::addTerm);
-        if(Worker.pageRank != null && Worker.pageRank.containsKey(name)) {
-            document.setPageRank(Worker.pageRank.get(name));
+        if(Worker.pageRank != null && Worker.pageRank.containsKey(document.getUrl())) {
+            document.setPageRank(Worker.pageRank.get(document.getUrl()));
         }
         document.generateVector();
         return document;

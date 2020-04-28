@@ -25,7 +25,7 @@ public class GraphBuilder {
         List<String> content = null;
         if(!filePath.isEmpty()) {
             File file = new File(filePath);
-            content = fileHandler.readFileContent(file);
+            content = fileHandler.readUrls(file);
         }
         if(content != null) {
             content.forEach((item) -> {

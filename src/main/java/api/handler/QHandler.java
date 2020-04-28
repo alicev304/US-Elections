@@ -58,20 +58,19 @@ public class QHandler implements IHandler {
         JsonObject jsonElement = new JsonObject();
 
         Map<String, Double> results;
-        System.out.println(qeType + " qeType");
 
         if(qeType != -1) {
             int K = 20;
             if(qeType == Constants.QE_SCALAR || qeType == Constants.QE_METRIC) {
                 K = 2;
             }
-            results = queryHandler.getTopKDocuments(documentHandler.getDocuments(), (byte)(modelType % 3), K, false);
+            results = queryHandler.getTopKDocuments(documentHandler.getDocuments(), (byte)(modelType % 3), K);
             try {
                 String newQuery = QueryExpansion.expander(queryString, results.keySet(), qeType);
                 core.query.handler.QueryHandler newQueryHandler = new core.query.handler.QueryHandler(newQuery);
                 newQueryHandler.populateQueryObject();
                 newQueryHandler.populateQueryVector(Worker.indexHeaders);
-                results = newQueryHandler.getTopKDocuments(documentHandler.getDocuments(), modelType,20, true);
+                results = newQueryHandler.getTopKDocuments(documentHandler.getDocuments(), modelType,20);
                 jsonElement.addProperty("exp_query", newQuery);
             }
             catch (Exception e) {
@@ -79,8 +78,9 @@ public class QHandler implements IHandler {
             }
         }
         else {
-            results = queryHandler.getTopKDocuments(documentHandler.getDocuments(), modelType,20, true);
+            results = queryHandler.getTopKDocuments(documentHandler.getDocuments(), modelType,20);
         }
+        System.out.println(results);
 
         int counter = 1;
         JsonArray jsonArray = new JsonArray();

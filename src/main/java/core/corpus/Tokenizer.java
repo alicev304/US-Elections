@@ -27,17 +27,7 @@ public class Tokenizer {
         this.stopWords = stopWords;
     }
 
-    public void tokenize(String dataPath, IFilter filter, boolean doFormatting) {
-        if(filter == null) {
-            return;
-        }
-        filter.construct();
-        FileHandler handler = new FileHandler(dataPath, filter, doFormatting);
-        Map<String, String> content = handler.readCorpus();
-        content.forEach(this::tokenize);
-    }
-
-    public void tokenize(String title, String text) {
+    public String tokenize(String title, String text) {
         String[] contentSplit;
         if(mode == LEMMA_TOKENS) {
             contentSplit = lemmatizer.lemmatize(text);
@@ -49,12 +39,15 @@ public class Tokenizer {
             contentSplit = text.split(" ");
         }
         tokenMap.put(title, new ArrayList<>());
+        StringBuilder builder = new StringBuilder();
         for (String item : contentSplit) {
             item = item.trim();
             if(!item.equals("") && !stopWords.contains(item)) {
                 tokenMap.get(title).add(item);
+                builder.append(item).append(" ");
             }
         }
+        return builder.toString();
     }
 
     public Map<String, List<String>> getTokenMap() {

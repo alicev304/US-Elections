@@ -1,37 +1,16 @@
 package utils.io;
 
-import core.corpus.Tokenizer;
 import core.ranker.Graph;
 import core.ranker.Node;
-import utils.Constants;
-import utils.filter.IFilter;
-import utils.Utils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;;
-import java.util.Map;
+import java.util.*;
 
 public class FileHandler {
-    private String filePath;
-    private IFilter filter;
-    private boolean format = false;
+    private final String filePath;
 
     public FileHandler(String filePath) {
         this.filePath = filePath;
-    }
-
-    public FileHandler(String filePath, IFilter filter) {
-        this.filePath = filePath;
-        this.filter = filter;
-    }
-
-    public FileHandler(String filePath, IFilter filter, boolean format) {
-        this.filePath = filePath;
-        this.filter = filter;
-        this.format = format;
     }
 
     public void writeLinksToFile(Map<String, Set<String>> pagesVisited) {
@@ -54,12 +33,13 @@ public class FileHandler {
         }
     }
 
-    public void writeCorpusToFiles(String title, String text) {
+    public void writeCorpusToFiles(String title, String text, String url) {
         File file = new File(filePath);
         if(!file.isDirectory()) {
             try {
                 FileWriter writer = new FileWriter(file);
                 BufferedWriter bufferedWriter = new BufferedWriter(writer);
+                bufferedWriter.write(url + '\n');
                 bufferedWriter.write(title + '\n');
                 bufferedWriter.write(text);
                 bufferedWriter.close();
@@ -122,16 +102,22 @@ public class FileHandler {
         }
     }
 
-    public List<String> readBrokenFile(File file, Tokenizer tokenizer) {
+    public List<String> readFileContent() {
+        File file = new File(filePath);
+        return readFileContent(file);
+    }
+
+    public List<String> readFileContent(File file) {
         List<String> content = null;
         if(file.isFile()) {
             try {
                 content = new ArrayList<>();
                 FileReader reader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(reader);
-                String line;
+                String line = bufferedReader.readLine();
+                content.add(line);
                 while ((line = bufferedReader.readLine()) != null) {
-                    List<String> tokens = tokenizer.
+                    content.addAll(Arrays.asList(line.split(" ")));
                 }
                 bufferedReader.close();
                 reader.close();
@@ -142,12 +128,8 @@ public class FileHandler {
         return content;
     }
 
-    public List<String> readFileContent() {
+    public List<String> reagPageRanks() {
         File file = new File(filePath);
-        return readFileContent(file);
-    }
-
-    public List<String> readFileContent(File file) {
         List<String> content = null;
         if(file.isFile()) {
             try {
@@ -167,33 +149,22 @@ public class FileHandler {
         return content;
     }
 
-    public Map<String, String> readCorpus() {
-        Map<String, String> content = new HashMap<String, String>();
-        try {
-            File dir = new File(filePath);
-            for(File file: dir.listFiles()) {
-                if(file.isFile()) {
-                    FileReader reader = new FileReader(file);
-                    BufferedReader bufferedReader = new BufferedReader(reader);
-                    String title = bufferedReader.readLine();
-                    StringBuilder text = new StringBuilder();
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        if(format) {
-                            line = Utils.formatInput(line);
-                        }
-                        text.append(line.trim()).append(" ");
-                    }
-                    String textString = text.toString();
-                    if (filter != null) {
-                        textString = filter.filter(textString);
-                    }
-                    content.put(title, textString);
+    public List<String> readUrls(File file) {
+        List<String> content = null;
+        if(file.isFile()) {
+            try {
+                content = new ArrayList<>();
+                FileReader reader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(reader);
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    content.add(line);
                 }
+                bufferedReader.close();
+                reader.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
         }
         return content;
     }

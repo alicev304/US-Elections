@@ -11,6 +11,8 @@ public class Document {
 
     private String name;
 
+    private String url;
+
     private Map<String, Short> termMap;
 
     private boolean type;
@@ -68,8 +70,16 @@ public class Document {
         return name;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Map<String, Double> getVector() {

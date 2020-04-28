@@ -12,7 +12,6 @@ import spark.ModelAndView;
 import spark.Spark;
 import spark.template.velocity.VelocityTemplateEngine;
 import utils.Constants;
-import utils.filter.HTMLFilter;
 import utils.io.FileHandler;
 import utils.io.IndexFileHandler;
 
@@ -83,9 +82,7 @@ public class Worker {
         //POST REST APIS
         post("/search", (request, response) -> {
             QHandler queryController = new QHandler();
-            String result = queryController.handleRequest(request);
-            System.out.println(result);
-            return result;
+            return queryController.handleRequest(request);
         });
     }
 
@@ -102,7 +99,7 @@ public class Worker {
         if (dir.isDirectory() && Objects.requireNonNull(dir.list()).length == 0) {
             Tokenizer tokenizer = new Tokenizer(Tokenizer.LEMMA_TOKENS, stopwords);
             CorpusBuilder builder = new CorpusBuilder(Constants.LIST_OF_URLS);
-            builder.build(tokenizer);
+            builder.build(tokenizer, true);
             tokenMap = tokenizer.getTokenMap();
         }
     }
@@ -122,7 +119,7 @@ public class Worker {
 
     private static void loadPageRankScores() {
         FileHandler fileHandler = new FileHandler(Constants.PAGE_RANKS);
-        List<String> content = fileHandler.readFileContent();
+        List<String> content = fileHandler.reagPageRanks();
         if(content != null && content.size() > 0) {
             if (pageRank == null) {
                 pageRank = new HashMap<>();

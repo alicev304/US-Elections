@@ -52,11 +52,11 @@ public class QueryHandler {
         }
     }
 
-    public Map<String, Double> getTopKDocuments(Document[] documents, byte method, int K, boolean base64Decode) {
+    public Map<String, Double> getTopKDocuments(Document[] documents, byte method, int K) {
         if(K > documents.length) {
             K = documents.length;
         }
-        Map<String, Double> csResults = getTopKDocumentsWithCosineSim(documents, K, base64Decode);
+        Map<String, Double> csResults = getTopKDocumentsWithCosineSim(documents, K);
         if(method == Constants.SIMPLE_COSINE) {
             return csResults;
         }
@@ -72,25 +72,20 @@ public class QueryHandler {
         return null;
     }
 
-    private Map<String, Double> getTopKDocumentsWithCosineSim(Document[] documents, int K, boolean base64Decode) {
+    private Map<String, Double> getTopKDocumentsWithCosineSim(Document[] documents, int K) {
         Map<String, Double> queryDocumentCosineScores = new LinkedHashMap<>();
         for (Document document : documents) {
             if(document != null) {
                 double score = Utils.dotProduct(query.getVector(), document.getVector());
                 if (score > 0) {
-                    queryDocumentCosineScores.put(document.getName(), score);
+                    queryDocumentCosineScores.put(document.getUrl(), score);
                 }
             }
         }
         queryDocumentCosineScores = Utils.sortMap(queryDocumentCosineScores);
         Map<String, Double> result = new LinkedHashMap<>();
         for(String key: queryDocumentCosineScores.keySet()) {
-            if(base64Decode) {
-                result.put(new String(Base64.decodeBase64(key)), queryDocumentCosineScores.get(key));
-            }
-            else {
-                result.put(key, queryDocumentCosineScores.get(key));
-            }
+            result.put(key, queryDocumentCosineScores.get(key));
             if (--K == 0) {
                 break;
             }

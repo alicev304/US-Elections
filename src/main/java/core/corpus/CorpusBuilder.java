@@ -4,12 +4,11 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import utils.Constants;
-import utils.filter.HTMLFilter;
+import utils.Utils;
 import utils.io.FileHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class CorpusBuilder {
     private final List<String> listOfUrls;
@@ -20,7 +19,7 @@ public class CorpusBuilder {
         handler.readLinks(listOfUrls);
     }
 
-    public void build(Tokenizer tokenizer) {
+    public void build(Tokenizer tokenizer, boolean format) {
         int docID = 0;
         for (String url: listOfUrls) {
             try {
@@ -28,9 +27,13 @@ public class CorpusBuilder {
                 if (doc != null){
                     String title = doc.title();
                     String text = doc.body().text();
-                    tokenizer.tokenize("output/corpus", new HTMLFilter(), true);
-                    FileHandler handler = new FileHandler(Constants.TOKENIZED_CORPUS_DIR_PATH + docID + ".txt");
-                    handler.writeCorpusToFiles(title, text);
+                    if(format) {
+                        text = Utils.formatInput(text);
+                    }
+                    text.trim();
+                    String tokenizedText = tokenizer.tokenize(title, text);
+                    FileHandler handler = new FileHandler(Constants.TOKENIZED_CORPUS_DIR_PATH + docID);
+                    handler.writeCorpusToFiles(title, tokenizedText, url);
                     docID++;
                 }
             } catch (Exception e) {
