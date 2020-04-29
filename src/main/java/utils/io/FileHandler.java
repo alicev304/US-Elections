@@ -1,7 +1,6 @@
 package utils.io;
 
-import api.Worker;
-import core.corpus.Tokenizer;
+import core.nlp.Tokenizer;
 import core.ranker.Graph;
 import core.ranker.Node;
 

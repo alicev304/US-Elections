@@ -1,7 +1,7 @@
 package core.query.handler;
 
 import api.Worker;
-import core.corpus.Tokenizer;
+import core.nlp.Tokenizer;
 import core.query.Document;
 import utils.Constants;
 import utils.io.FileHandler;

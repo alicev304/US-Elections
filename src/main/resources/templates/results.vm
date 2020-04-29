@@ -35,13 +35,13 @@
     </blockquote>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon1">Query</span>
+        <span class="input-group-text" id="basic-addon1" style="font-weight: bold">Query         </span>
       </div>
       <input type="text" class="form-control" id="query_input" placeholder="search query" aria-label="query" aria-describedby="basic-addon1" value="$query" readonly>
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon2">Expanded Query</span>
+        <span class="input-group-text" id="basic-addon2" style="font-weight: bold">Expanded Query</span>
       </div>
       <input type="text" class="form-control" id="exp_query_input" placeholder="expanded search query" aria-label="expanded_query" aria-describedby="basic-addon2" value="$expandedQuery" readonly>
     </div>

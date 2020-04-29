@@ -1,7 +1,7 @@
 package core.crawler;
 
 import api.Worker;
-import core.corpus.Tokenizer;
+import core.nlp.Tokenizer;
 import utils.Constants;
 import utils.io.FileHandler;
 
@@ -11,22 +11,17 @@ import java.util.regex.Pattern;
 public class Crawler {
 
     private static final int MAX_DEPTH = 3;
-    private static final int MAX_FILES = 5000;
+    private static final int MAX_FILES = 3000;
     private static final Pattern SUFFIX_FILTER = Pattern.compile(".*(\\.(css|js|gif|jpg|png|mp3|mp4|zip|gz|pdf))$");
     private static final Pattern PREFIX_FILTER = Pattern.compile("mailto:.*$");
     private static final String SEARCH_FILTER = "search";
 
     private static final String[] urlList = {
-            "https://en.wikipedia.org/wiki/List_of_presidents_of_the_United_States",
             "https://www.cnn.com/election/2020/primaries-and-caucuses",
             "https://www.whitehouse.gov/about-the-white-house/elections-voting",
             "https://www.nytimes.com/news-event/2020-election",
-            "https://en.wikipedia.org/wiki/United_States_presidential_election",
-            "https://history.house.gov/Institution/Election-Statistics/Election-Statistics",
-            "https://www.britannica.com/topic/United-States-Presidential-Election-Results-1788863",
-            "https://www.history.com/this-day-in-history/first-u-s-presidential-election",
             "http://dmoztools.net/Regional/North_America/United_States/Government/Elections/President",
-            "https://www.vote411.org/"};
+            "https://en.wikipedia.org/wiki/List_of_presidents_of_the_United_States"};
 
     Map<String, Set<String>> pagesVisited;
     Queue<URL> URLQueue;

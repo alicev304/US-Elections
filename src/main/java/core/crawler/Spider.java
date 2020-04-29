@@ -1,6 +1,6 @@
 package core.crawler;
 
-import core.corpus.Tokenizer;
+import core.nlp.Tokenizer;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

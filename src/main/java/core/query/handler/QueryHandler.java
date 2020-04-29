@@ -1,20 +1,18 @@
 package core.query.handler;
 
 import api.Worker;
-import core.corpus.Tokenizer;
+import core.nlp.Tokenizer;
 import core.query.Document;
 import core.query.Query;
 import core.ranker.Graph;
 import core.ranker.GraphBuilder;
 import core.ranker.HITS;
-import org.apache.commons.codec.binary.Base64;
 import utils.Constants;
 import utils.Utils;
 import utils.filter.IFilter;
 import utils.filter.QueryFilter;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;

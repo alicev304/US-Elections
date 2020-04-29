@@ -25,7 +25,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background-image: url('../images/background.jpg')">
 
 <script>
     window.onload=onloading;
@@ -35,7 +35,6 @@
         document.getElementById("google").src="https://www.google.com/search?q=$query&igu=1";
     }
 </script>
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 z-depth-3">

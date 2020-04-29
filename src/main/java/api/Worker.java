@@ -1,7 +1,6 @@
 package api;
 
 import api.controller.QueryController;
-import core.corpus.Tokenizer;
 import core.crawler.Crawler;
 import core.indexer.SPIMI;
 import core.ranker.Graph;
