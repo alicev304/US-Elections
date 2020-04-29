@@ -115,10 +115,10 @@ public class QueryController implements IController {
                 if (ctResults.size() >= k) break;
                 int cluster;
                 if (cType == Constants.K_MEANS) {
-                    cluster = Worker.KMClustering.get(key);
+                    cluster = Worker.KMClustering.get(key.replace("__hub__", "").replace("__auth__", ""));
                 }
                 else {
-                    cluster = Worker.AggClustering.get(key);
+                    cluster = Worker.AggClustering.get(key.replace("__hub__", "").replace("__auth__", ""));
                 }
                 if (visitedClusters.contains(cluster)) continue;
                 visitedClusters.add(cluster);
