@@ -1,7 +1,6 @@
 package api;
 
-import api.handler.QHandler;
-import core.corpus.CorpusBuilder;
+import api.controller.QueryController;
 import core.corpus.Tokenizer;
 import core.crawler.Crawler;
 import core.indexer.SPIMI;
@@ -24,7 +23,6 @@ import java.util.*;
 import static spark.Spark.*;
 
 public class Worker {
-    public static Map<String, List<String>> tokenMap = null;
 
     public static Map<String, Short> indexHeaders = null;
 
@@ -34,16 +32,23 @@ public class Worker {
 
     public static HashSet<String> stopwords = null;
 
+    public static Map<String, List<String>> tokenMap;
+
+    public static Map<String, Integer> KMClustering;
+    public static Map<String, Integer> AggClustering;
+    public static Map<Integer, List<String>> KMClusteringInv;
+    public static Map<Integer, List<String>> AggClusteringInv;
+
     public static void main(String[] args) {
 
         Spark.staticFileLocation("/");
         loadStopwords(Constants.STOPWORDS);
         fetchLinks();
-        buildCorpus();
         createIndex();
         loadGraph();
         loadIndexHeaders();
         loadPageRankScores();
+        loadClusters();
 
         port(8080);
         //GET REST APIS
@@ -81,7 +86,7 @@ public class Worker {
 
         //POST REST APIS
         post("/search", (request, response) -> {
-            QHandler queryController = new QHandler();
+            QueryController queryController = new QueryController();
             return queryController.handleRequest(request);
         });
     }
@@ -91,16 +96,7 @@ public class Worker {
         if (!linkFile.exists()) {
             Crawler crawler = new Crawler();
             crawler.crawl();
-        }
-    }
-
-    private static void buildCorpus() {
-        File dir = new File(Constants.TOKENIZED_CORPUS_DIR_PATH);
-        if (dir.isDirectory() && Objects.requireNonNull(dir.list()).length == 0) {
-            Tokenizer tokenizer = new Tokenizer(Tokenizer.LEMMA_TOKENS, stopwords);
-            CorpusBuilder builder = new CorpusBuilder(Constants.LIST_OF_URLS);
-            builder.build(tokenizer, true);
-            tokenMap = tokenizer.getTokenMap();
+            tokenMap = crawler.tokenizer.getTokenMap();
         }
     }
 
@@ -119,7 +115,7 @@ public class Worker {
 
     private static void loadPageRankScores() {
         FileHandler fileHandler = new FileHandler(Constants.PAGE_RANKS);
-        List<String> content = fileHandler.reagPageRanks();
+        List<String> content = fileHandler.readFileContents();
         if(content != null && content.size() > 0) {
             if (pageRank == null) {
                 pageRank = new HashMap<>();
@@ -159,28 +155,14 @@ public class Worker {
         }
     }
 
-//    private static void loadHITSScores() {
-//        FileHandler fileHandler = new FileHandler(Constants.HITS);
-//        List<String> content = fileHandler.readFileContent();
-//        if(content != null && content.size() > 0) {
-//            if (authorityScores == null) {
-//                authorityScores = new HashMap<>();
-//            }
-//            if (hubScores == null) {
-//                hubScores = new HashMap<>();
-//            }
-//            content.forEach((item) -> {
-//                String[] contentSplit = item.split(" ");
-//                if (contentSplit.length == 3) {
-//                    double hubScore = Double.parseDouble(contentSplit[1]);
-//                    double authScore = Double.parseDouble(contentSplit[2]);
-//                    if (hubScore == 0.0) {
-//                        authorityScores.put(contentSplit[0], authScore);
-//                    } else if (authScore == 0.0) {
-//                        authorityScores.put(contentSplit[0], hubScore);
-//                    }
-//                }
-//            });
-//        }
-//    }
+    public static void loadClusters() {
+        KMClustering = new HashMap<>();
+        KMClusteringInv = new HashMap<>();
+        AggClustering = new HashMap<>();
+        AggClusteringInv = new HashMap<>();
+        FileHandler handler = new FileHandler(Constants.K_CLUSTERING);
+        handler.readClusterFile(KMClustering, KMClusteringInv);
+        handler = new FileHandler(Constants.A_CLUSTERING);
+        handler.readClusterFile(AggClustering, AggClusteringInv);
+    }
 }

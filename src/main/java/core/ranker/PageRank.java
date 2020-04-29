@@ -7,17 +7,10 @@ import java.util.Map;
 
 public class PageRank {
 
-    private Graph graph;
-
-    private double dampingFactor = 0.8;
+    private final Graph graph;
 
     public PageRank(Graph graph) {
         this.graph = graph;
-    }
-
-    public PageRank(Graph graph, double dampingFactor) {
-        this.graph = graph;
-        this.dampingFactor = dampingFactor;
     }
 
     public Graph getGraph() {
@@ -28,8 +21,8 @@ public class PageRank {
         graph.initializeGraphWeights(1.0 / graph.getNodes().size());
         Map<String, Node> nodes = graph.getNodes();
         Map<String, Double> nodeScore = new HashMap<>();
+        double dampingFactor = 0.8;
         double startingWeight = (1.0 - dampingFactor);
-        int counter = 1;
         while (true) {
             boolean doBreak = true;
             for(String key: nodes.keySet()) {

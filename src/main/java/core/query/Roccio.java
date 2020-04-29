@@ -5,15 +5,14 @@ import utils.Utils;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Roccio {
-    public static String return_best(Query q, Document[] dp, Document[] dn)
+    public static String return_best(Query q, Document[] dp, Document[] dn, String query)
     {
         HashSet<String> q_final = new HashSet<String>();
         Map<String, Double> vector = new LinkedHashMap<>();
         int ct=2;
-        String return_query="";
+        String return_query=query;
         for(String s:q.getVector().keySet())
             vector.put(s,0.0);
         for(Document d:dp)
@@ -31,17 +30,22 @@ public class Roccio {
             q_final.add(s);
         for(String s:q_final)
         {
-            return_query+=s+" ";
-            ct--;
-            if(ct==0)
-                break;
+            if (!return_query.contains(s)) {
+                return_query += " " + s;
+                ct--;
+                if (ct == 0)
+                    break;
+            }
         }
         return return_query;
     }
 
     public static double rocchio_score(String s, Query q, Document[] dp, Document[] dn)
     {
-        double alpha = q.getVector().get(s);
+        double alpha = 0.0;
+        if (q.getVector().containsKey(s)) {
+            alpha = q.getVector().get(s);
+        }
         double beta = 0.0;
         double gamma = 0.0;
         for(Document d:dp)

@@ -9,10 +9,11 @@ public interface Constants {
     String MULTISPACE_REGEX = "[ ]+";
     String LIST_OF_URLS = "output/links.txt";
     String PAGE_RANKS = "output/pagerank.txt";
-    String HITS = "output/hits.txt";
     String STOPWORDS = "src/main/resources/stopwords.txt";
     String TOKENIZED_CORPUS_DIR_PATH = "output/corpus/";
     String INDEX_FILE = "output/index_uncompressed";
+    String K_CLUSTERING = "output/kmeans.txt";
+    String A_CLUSTERING = "output/agglomerative.txt";
     String SUCCESS_STATUS = "success";
     String FAILURE_STATUS = "failure";
     String INVALID_PARAMETERS = "Incorrect number or type or parameters found! " +
@@ -24,4 +25,6 @@ public interface Constants {
     byte SIMPLE_COSINE = 1;
     byte SIMPLE_COSINE_W_PR = 2;
     byte SIMPLE_COSINE_W_HITS = 3;
+    byte K_MEANS = 1;
+    byte AGGLOMERATIVE = 2;
 }

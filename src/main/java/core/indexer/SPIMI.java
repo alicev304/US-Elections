@@ -16,15 +16,9 @@ public class SPIMI {
     private byte indexCounter = 0;
 
     public void createIndex(Map<String, List<String>> termMap, String outFile) {
-        String[] docIds = new String[termMap.size() + 1];
         int counter = 1;
-        docIds[0] = "";
-
         for(String docId: termMap.keySet()) {
             try {
-                if(!docIds[counter - 1].equals(docId)) {
-                    docIds[counter] = docId;
-                }
                 List<String> termList = termMap.get(docId);
                 if(index == null) {
                     index = new LinkedHashMap<>();

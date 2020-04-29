@@ -876,11 +876,11 @@ legend {
   min-width: 100px;
   height: 40px;
   padding: 0 15px;
-  background: #e45c27;
+  background: #dbdbdb;
   white-space: nowrap;
   border-radius: 3px;
   font-size: 14px;
-  color: #fff;
+  color: #120136;
   transition: all .2s ease-out, color .2s ease-out;
   border: 0;
   cursor: pointer;
@@ -888,7 +888,7 @@ legend {
 }
 
 .s008 form .inner-form .input-field .btn-search:hover {
-  background: #d7501b;
+  background: #dbdbdb;
 }
 
 .s008 form .inner-form .input-field .btn-delete {
@@ -942,7 +942,7 @@ legend {
 }
 
 .s008 form .inner-form .advance-search {
-  background: #000e;
+  background: #fff;
   padding: 40px;
   border-radius: 3px;
   box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
@@ -950,7 +950,7 @@ legend {
 
 .s008 form .inner-form .advance-search .desc {
   font-size: 15px;
-  color: #999;
+  color: #000;
   display: block;
   margin-bottom: 26px;
 }
@@ -1006,7 +1006,7 @@ legend {
 }
 
 .s008 form .inner-form .advance-search .input-select {
-  height: 40px;
+  height: 30px;
 }
 
 .s008 form .inner-form .advance-search .choices__inner {
@@ -1051,12 +1051,12 @@ legend {
   -ms-flex-align: center;
       align-items: center;
   height: 100%;
-  color: #fff;
+  color: #000;
 }
 
 .s008 form .inner-form .advance-search .choices__list.choices__list--dropdown {
   border: 0;
-  background: #000;
+  background: #fff;
   padding: 20px 30px;
   margin-top: 2px;
   border-radius: 4px;
@@ -1069,7 +1069,7 @@ legend {
 
 .s008 form .inner-form .advance-search .choices__list--dropdown .choices__item--selectable.is-highlighted {
   background: transparent;
-  color: #e45c27;
+  color: #000;
 }
 
 .s008 form .inner-form .advance-search .choices__list--dropdown .choices__item {
@@ -1093,7 +1093,7 @@ legend {
 }
 
 .s008 form .inner-form .advance-search .choices[data-type*="select-one"] .choices__button {
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='%23e45c27' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3e%3cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='%23fff' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3e%3cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3e%3c/svg%3e");
   background-size: 16px 16px;
   background-position: right center;
   width: 32px;
@@ -1129,11 +1129,11 @@ legend {
   .s008 form .inner-form .basic-search .input-field .icon-wrap {
     width: 60px;
     -ms-flex-pack: center;
-        justify-content: center;
+    justify-content: center;
   }
   .s008 form .inner-form .basic-search .input-field .icon-wrap svg {
-    width: 26px;
-    height: 26px;
+    width: 0px;
+    height: 0px;
   }
   .s008 form .inner-form .advance-search .row {
     display: block;

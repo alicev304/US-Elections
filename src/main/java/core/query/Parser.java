@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.util.*;
 
 public class Parser {
-    public static String[] return_best(String file,String token) throws Exception
+    public static String[] return_best(String file, String token) throws Exception
     {
         BufferedReader br = new BufferedReader(new FileReader(file));
         String text;

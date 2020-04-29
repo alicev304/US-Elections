@@ -1,6 +1,7 @@
 package core.query.handler;
 
 import api.Worker;
+import core.corpus.Tokenizer;
 import core.query.Document;
 import utils.Constants;
 import utils.io.FileHandler;
@@ -18,12 +19,40 @@ public class DocumentHandler {
         this.corpusPath = corpusPath;
     }
 
+    public DocumentHandler(int cluster, byte cType) {
+        this.corpusPath = Constants.TOKENIZED_CORPUS_DIR_PATH;
+        List<String> docIds;
+        if (cType == 1) {
+            docIds = Worker.KMClusteringInv.get(cluster);
+        } else {
+            docIds = Worker.AggClusteringInv.get(cluster);
+        }
+        documents = new Document[docIds.size()];
+        int counter = 0;
+        FileHandler handler = new FileHandler(this.corpusPath);
+        for (String docID: docIds) {
+            File file = new File(this.corpusPath + docID);
+            if (file.isFile()) {
+                documents[counter] = toDocument(handler.readFileContent(file), counter);
+            }
+            counter++;
+        }
+    }
+
     public Document[] getDocuments() {
         return documents;
     }
 
+    public String getNameByUrl(String url) {
+        for (Document doc: documents) {
+            if (doc.getUrl().compareTo(url) == 0) return doc.getName();
+        }
+        return "DOC NOT FOUND!!!";
+    }
+
     public void loadDocuments() {
         FileHandler fileHandler = new FileHandler(corpusPath);
+        Tokenizer tokenizer = new Tokenizer(Tokenizer.LEMMA_TOKENS, Worker.stopwords);
         if(!corpusPath.isEmpty()) {
             File file = new File(corpusPath);
             if(file.isDirectory()) {

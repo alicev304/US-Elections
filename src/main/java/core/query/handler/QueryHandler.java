@@ -14,8 +14,10 @@ import utils.filter.IFilter;
 import utils.filter.QueryFilter;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class QueryHandler {
     private final String queryStr;
@@ -77,9 +79,7 @@ public class QueryHandler {
         for (Document document : documents) {
             if(document != null) {
                 double score = Utils.dotProduct(query.getVector(), document.getVector());
-                if (score > 0) {
-                    queryDocumentCosineScores.put(document.getUrl(), score);
-                }
+                queryDocumentCosineScores.put(document.getUrl(), score);
             }
         }
         queryDocumentCosineScores = Utils.sortMap(queryDocumentCosineScores);
@@ -137,5 +137,40 @@ public class QueryHandler {
             counter--;
         }
         return hitsResults;
+    }
+
+    public void getRNR(Document[] documents, Document[] dp, Document[] dn) {
+        Map<Document, Double> rnr = new LinkedHashMap<>();
+        for (Document document : documents) {
+            if(document != null) {
+                double score = Utils.dotProduct(query.getVector(), document.getVector());
+                rnr.put(document, score);
+            }
+        }
+        rnr = rnr.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Document, Double>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+        int counter = 5;
+        for (Document doc: rnr.keySet()) {
+            dp[--counter] = doc;
+            if (counter == 0) {
+                break;
+            }
+        }
+        rnr = rnr.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Document, Double>comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+        counter = 5;
+        for (Document doc: rnr.keySet()) {
+            dn[--counter] = doc;
+            if (counter == 0) {
+                break;
+            }
+        }
+        System.out.println("Rocchio done!!!");
     }
 }

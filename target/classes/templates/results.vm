@@ -18,6 +18,12 @@
         }
         .panel-heading {
             padding-bottom: 10px;
+            font-weight: bold;
+            border-bottom: black 1px dashed;
+        }
+        .panel-heading1 {
+            padding-bottom: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -25,7 +31,7 @@
 <body>
 <div class="container">
     <blockquote class="blockquote">
-      <p class="mb-0">US Federal Elections Search Engine.</p>
+      <p class="mb-0" style="border-bottom: 1px dashed black">US Federal Elections</p>
     </blockquote>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -40,7 +46,7 @@
       <input type="text" class="form-control" id="exp_query_input" placeholder="expanded search query" aria-label="expanded_query" aria-describedby="basic-addon2" value="$expandedQuery" readonly>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading">Advanced Search</div>
+        <div class="panel-heading1">Search Options</div>
         <div class="panel-body">
           <div class="row">
               <div class="form-group col-md-4">
@@ -54,6 +60,7 @@
                   <select class="form-control" id="clusteringSelect">
                     <option value="-1">Clustering</option>
                     <option value="1">K Means</option>
+                      <option value="2">Agglomerative</option>
                   </select>
               </div>
               <div class="form-group col-md-4">
@@ -72,8 +79,8 @@
         </div>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading">Search Results</div>
-        <div class="panel-body">
+        <div class="panel-heading">Results</div>
+        <div class="panel-body1">
           <ul class="list-group list-group-flush" id="results_list">
           </ul>
         </div>
@@ -102,7 +109,7 @@
                 }
                 if(data.data.results) {
                     $.each(data.data.results, function(i, f) {
-                        var liItem = '<li class="list-group-item"><a href="' + f.url + '">' + f.url + '</a></li>';
+                        var liItem = '<li class="list-group-item" style="border-bottom: 1px solid black">'+f.title+'<br /><a style="font-size: small" href="' + f.url + '">' + f.url + '</a></li>';
                         $(liItem).appendTo("#results_list");
                     });
                 }

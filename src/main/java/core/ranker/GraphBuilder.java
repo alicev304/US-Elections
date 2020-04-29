@@ -3,7 +3,6 @@ package core.ranker;
 import utils.Constants;
 import utils.io.FileHandler;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,7 @@ public class GraphBuilder {
         FileHandler fileHandler = new FileHandler(filePath);
         List<String> content = null;
         if(!filePath.isEmpty()) {
-            File file = new File(filePath);
-            content = fileHandler.readUrls(file);
+            content = fileHandler.readFileContents();
         }
         if(content != null) {
             content.forEach((item) -> {

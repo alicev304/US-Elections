@@ -1,7 +1,7 @@
-package api.handler;
+package api.controller;
 
 import spark.Request;
 
-public interface IHandler {
+public interface IController {
     String handleRequest(Request request);
 }

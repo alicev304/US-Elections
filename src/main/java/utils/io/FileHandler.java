@@ -1,5 +1,7 @@
 package utils.io;
 
+import api.Worker;
+import core.corpus.Tokenizer;
 import core.ranker.Graph;
 import core.ranker.Node;
 
@@ -33,7 +35,7 @@ public class FileHandler {
         }
     }
 
-    public void writeCorpusToFiles(String title, String text, String url) {
+    public void writeCorpusToFile(String title, String text, String url, Tokenizer tokenizer) {
         File file = new File(filePath);
         if(!file.isDirectory()) {
             try {
@@ -41,7 +43,7 @@ public class FileHandler {
                 BufferedWriter bufferedWriter = new BufferedWriter(writer);
                 bufferedWriter.write(url + '\n');
                 bufferedWriter.write(title + '\n');
-                bufferedWriter.write(text);
+                bufferedWriter.write(String.join(" ", tokenizer.tokenize(file.getName(), text)));
                 bufferedWriter.close();
                 writer.close();
             }
@@ -81,32 +83,6 @@ public class FileHandler {
         }
     }
 
-    public void readLinks(List<String> listOfUrls) {
-        File file = new File(filePath);
-        if(!file.isDirectory()) {
-            try {
-                FileReader reader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(reader);
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.split(" ").length > 1) {
-                        listOfUrls.add(line.split(" ")[1]);
-                    }
-                }
-                bufferedReader.close();
-                reader.close();
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    public List<String> readFileContent() {
-        File file = new File(filePath);
-        return readFileContent(file);
-    }
-
     public List<String> readFileContent(File file) {
         List<String> content = null;
         if(file.isFile()) {
@@ -115,6 +91,8 @@ public class FileHandler {
                 FileReader reader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(reader);
                 String line = bufferedReader.readLine();
+                content.add(line);
+                line = bufferedReader.readLine();
                 content.add(line);
                 while ((line = bufferedReader.readLine()) != null) {
                     content.addAll(Arrays.asList(line.split(" ")));
@@ -128,7 +106,31 @@ public class FileHandler {
         return content;
     }
 
-    public List<String> reagPageRanks() {
+    public Map<String, String> readFiles() {
+        Map<String, String> content = new HashMap<>();
+        File dir = new File(filePath);
+        if (dir.isDirectory() && Objects.requireNonNull(dir.listFiles()).length > 0) {
+            for (File file: Objects.requireNonNull(dir.listFiles())) {
+                try{
+                    FileReader reader = new FileReader(file);
+                    BufferedReader bufferedReader = new BufferedReader(reader);
+                    String line = bufferedReader.readLine();
+                    String title = bufferedReader.readLine();
+                    String docID = file.getName();
+                    StringBuilder text = new StringBuilder();
+                    while ((line = bufferedReader.readLine()) != null) {
+                        text.append(line.trim()).append(" ");
+                    }
+                    content.put(docID, text.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return content;
+    }
+
+    public List<String> readFileContents() {
         File file = new File(filePath);
         List<String> content = null;
         if(file.isFile()) {
@@ -149,16 +151,24 @@ public class FileHandler {
         return content;
     }
 
-    public List<String> readUrls(File file) {
-        List<String> content = null;
-        if(file.isFile()) {
+    public void readClusterFile(Map<String, Integer> cluster, Map<Integer, List<String>> clusterInv) {
+        File file = new File(filePath);
+        if (file.isFile()) {
             try {
-                content = new ArrayList<>();
                 FileReader reader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(reader);
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    content.add(line);
+                    String[] content = line.split(" ");
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < content.length-2; i++) {
+                        builder.append(content[i]).append(" ");
+                    }
+                    cluster.put(builder.toString().trim(), Integer.parseInt(content[content.length-2]));
+                    if (!clusterInv.containsKey(Integer.parseInt(content[content.length-2]))) {
+                        clusterInv.put(Integer.parseInt(content[content.length-2]), new ArrayList<>());
+                    }
+                    clusterInv.get(Integer.parseInt(content[content.length-2])).add(content[content.length-1]);
                 }
                 bufferedReader.close();
                 reader.close();
@@ -166,12 +176,19 @@ public class FileHandler {
                 System.out.println(e.getMessage());
             }
         }
-        return content;
     }
 
     public void deleteFile() {
         File file = new File(filePath);
         if(file.exists())
             file.delete();
+    }
+
+    public static int getDocID(String dirPath) {
+        File dir = new File(dirPath);
+        if (dir.isDirectory()) {
+            return Objects.requireNonNull(dir.listFiles()).length;
+        }
+        return -1;
     }
 }

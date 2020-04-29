@@ -1,4 +1,4 @@
-package api.handler;
+package api.controller;
 
 import com.google.gson.JsonElement;
 import utils.Constants;
@@ -22,10 +22,6 @@ public class StandardResponse {
     public StandardResponse(String status, JsonElement jsonElement) {
         this.status = status;
         this.data = jsonElement;
-    }
-
-    public static StandardResponse getSuccessResponse() {
-        return new StandardResponse(Constants.SUCCESS_STATUS);
     }
 
     public static StandardResponse getFailureResponse(String message) {

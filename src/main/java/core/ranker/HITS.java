@@ -1,13 +1,11 @@
 package core.ranker;
 
-import utils.io.FileHandler;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class HITS {
 
-    private Graph webGraph;
+    private final Graph webGraph;
 
     private double initialWeights = 1.0;
 
@@ -21,10 +19,6 @@ public class HITS {
     public HITS(Graph graph, double initialWeights) {
         this.webGraph = graph;
         this.initialWeights = initialWeights;
-    }
-
-    public Graph getWebGraph() {
-        return this.webGraph;
     }
 
     public void computeHITSScores() {
@@ -41,29 +35,26 @@ public class HITS {
             boolean doBreak = true;
             for(String key: nodes.keySet()) {
                 Node node = nodes.get(key);
-                double weight = 0.0;
+                double hubWeight = 0.0;
+                double authWeight = 0.0;
                 if(node.getSourceNodes() != null) {
                     for (Node sourceNode : node.getSourceNodes()) {
-                        weight += hubScores.get(sourceNode.getName())[1];
+                        hubWeight += hubScores.get(sourceNode.getName())[1];
                     }
-                    totalAuthorityScore += weight;
+                    totalAuthorityScore += hubWeight;
                 }
-                Double[] weights = authorityScores.get(key);
-                weights[1] = weight;
-                authorityScores.put(key, weights);
-            }
-            for(String key: nodes.keySet()) {
-                Node node = nodes.get(key);
-                double weight = 0.0;
                 if(node.getTargetNodes() != null) {
                     for (Node targetNode : node.getTargetNodes()) {
-                        weight += authorityScores.get(targetNode.getName())[1];
+                        authWeight += authorityScores.get(targetNode.getName())[1];
                     }
-                    totalHubScore += weight;
+                    totalHubScore += authWeight;
                 }
-                Double[] weights = hubScores.get(key);
-                weights[1] = weight;
-                hubScores.put(key, weights);
+                Double[] hubWeights = authorityScores.get(key);
+                hubWeights[1] = hubWeight;
+                authorityScores.put(key, hubWeights);
+                Double[] authWeights = hubScores.get(key);
+                authWeights[1] = authWeight;
+                hubScores.put(key, authWeights);
             }
             for(String key: hubScores.keySet()) {
                 Double[] hubWeights = hubScores.get(key);
@@ -106,10 +97,5 @@ public class HITS {
 
     public Map<String, Double[]> getAuthorityScores() {
         return authorityScores;
-    }
-
-    public void writeResults(String filePath) {
-        FileHandler handler = new FileHandler(filePath);
-        handler.writeGraphToFile(webGraph, false);
     }
 }

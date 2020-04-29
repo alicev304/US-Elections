@@ -36,6 +36,8 @@ public class QueryExpansion {
             filename = "association.txt";
         else if (method== Constants.QE_METRIC) //metric
             filename = "metric.txt";
+        else if (method == Constants.QE_ROCCHIO) // roccio
+            filename = "roccio.txt";
         for(String st:query_tokens)
         {
             v.add(st);
